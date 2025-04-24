@@ -14,9 +14,10 @@ steps:
     cd my-app
     python -m pip install --upgrade pip
     pip install -r requirements.txt
-  displayName: 'Install dependencies'
+    pip install pytest-cov
+  displayName: 'Install dependencies with coverage'
 
 - script: |
     cd my-app
-    PYTHONPATH=$(pwd) pytest tests/
-  displayName: 'Run unit tests'
+    PYTHONPATH=$(pwd) pytest --cov=app --cov-report=term --cov-report=xml tests/
+  displayName: 'Run unit tests with coverage'
