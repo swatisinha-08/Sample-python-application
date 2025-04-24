@@ -8,7 +8,7 @@ variables:
   SONAR_SCANNER_MODE: 'CLI'
   SONAR_PROJECT_KEY: 'swatisinha8403_Pipeline'  # ✅ Ensure this matches the project key from SonarCloud
   SONAR_ORGANIZATION: 'swatisinha8403'
-  SONAR_TOKEN: $(SONAR_TOKEN)  # ✅ Make sure this variable is stored securely in Azure DevOps Library
+  SONAR_TOKEN: '5126b35ea5aa79d5027c62de6b245952429a4d82'  # ✅ Make sure this variable is stored securely in Azure DevOps Library
 
 steps:
 - task: UsePythonVersion@0
