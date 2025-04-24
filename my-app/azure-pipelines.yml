@@ -11,10 +11,12 @@ steps:
     addToPath: true
 
 - script: |
+    cd my-app
     python -m pip install --upgrade pip
     pip install -r requirements.txt
   displayName: 'Install dependencies'
 
 - script: |
+    cd my-app
     pytest tests/
   displayName: 'Run unit tests'
