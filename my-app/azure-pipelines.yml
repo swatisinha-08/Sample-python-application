@@ -4,6 +4,12 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  SONAR_SCANNER_MODE: 'CLI'
+  SONAR_PROJECT_KEY: 'swatisinha8403_Pipeline'  # ✅ Ensure this matches the project key from SonarCloud
+  SONAR_ORGANIZATION: 'swatisinha8403'
+  SONAR_TOKEN: '5126b35ea5aa79d5027c62de6b245952429a4d82'  # ✅ Make sure this variable is stored securely in Azure DevOps Library
+
 steps:
 - task: UsePythonVersion@0
   inputs:
@@ -11,13 +17,31 @@ steps:
     addToPath: true
 
 - script: |
-    cd my-app
     python -m pip install --upgrade pip
     pip install -r requirements.txt
-    pip install pytest-cov
-  displayName: 'Install dependencies with coverage'
+    pip install pytest pytest-cov
+  displayName: 'Install dependencies'
+
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'SonarCloud'  # ✅ This must match the name of the service connection as seen in your screenshot
+    organization: '$(SONAR_ORGANIZATION)'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: '$(SONAR_PROJECT_KEY)'
+    cliProjectName: 'Pipeline'
+    extraProperties: |
+      sonar.sources=.
+      sonar.python.coverage.reportPaths=coverage.xml
 
 - script: |
-    cd my-app
-    PYTHONPATH=$(pwd) pytest --cov=app --cov-report=term --cov-report=xml tests/
-  displayName: 'Run unit tests with coverage'
+    pytest --cov=. --cov-report xml
+  displayName: 'Run tests and generate coverage report'
+
+- task: SonarCloudAnalyze@1
+  displayName: 'Run SonarCloud analysis'
+
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
+  displayName: 'Publish SonarCloud results'
