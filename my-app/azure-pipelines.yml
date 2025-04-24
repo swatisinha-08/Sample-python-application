@@ -22,6 +22,10 @@ steps:
     pip install pytest pytest-cov
   displayName: 'Install dependencies'
 
+- script: |
+    export PYTHONPATH=$(pwd)/my-app  # Set the PYTHONPATH to include your app directory
+  displayName: 'Set PYTHONPATH'
+
 - task: SonarCloudPrepare@1
   inputs:
     SonarCloud: 'SonarCloud'  # ✅ This must match the name of the service connection as seen in your screenshot
@@ -31,11 +35,11 @@ steps:
     cliProjectKey: '$(SONAR_PROJECT_KEY)'
     cliProjectName: 'Pipeline'
     extraProperties: |
-      sonar.sources=.
+      sonar.sources=my-app  # Update this to your app directory if it's not at the root
       sonar.python.coverage.reportPaths=coverage.xml
 
 - script: |
-    pytest --cov=. --cov-report xml
+    pytest --cov=my-app --cov-report xml  # Run tests and generate the coverage report for the 'my-app' directory
   displayName: 'Run tests and generate coverage report'
 
 - task: SonarCloudAnalyze@1
