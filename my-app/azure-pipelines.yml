@@ -23,8 +23,9 @@ steps:
   displayName: 'Install dependencies'
 
 - script: |
-    export PYTHONPATH=$(pwd)/my-app  # Set the PYTHONPATH to include your app directory
-  displayName: 'Set PYTHONPATH'
+    export PYTHONPATH=$(pwd)/my-app  # Set PYTHONPATH to include your app directory
+    pytest --cov=my-app --cov-report xml  # Run tests and generate coverage report for the 'my-app' directory
+  displayName: 'Run tests and generate coverage report'
 
 - task: SonarCloudPrepare@1
   inputs:
@@ -37,10 +38,6 @@ steps:
     extraProperties: |
       sonar.sources=my-app  # Update this to your app directory if it's not at the root
       sonar.python.coverage.reportPaths=coverage.xml
-
-- script: |
-    pytest --cov=my-app --cov-report xml  # Run tests and generate the coverage report for the 'my-app' directory
-  displayName: 'Run tests and generate coverage report'
 
 - task: SonarCloudAnalyze@1
   displayName: 'Run SonarCloud analysis'
