@@ -1,6 +1,7 @@
 from app.calculator import add, subtract, multiply, divide
 import pytest
-
+import sys
+print(sys.path)
 def test_add():
     assert add(2, 3) == 5
 
